@@ -40,8 +40,11 @@ trait AssertResponse
         'callable'
     ];
     
-    public function customAssertContent(array $actualData, array $expectedData, $isRequiredKey = true)
+    public function customAssertContent(array $actualData, array $expectedData, $isRequiredKey = true, $requiredKeys = [])
     {
+        if (!empty($requiredKeys)) {
+            self::$requiredKeys = $requiredKeys;
+        }
         self::assertInternalType('array', $actualData);
         if ($actualData) {
             if ($isRequiredKey) {
@@ -82,7 +85,7 @@ trait AssertResponse
     
     public function assertRequireKeys(array $actualData)
     {
-        foreach (self::$requiredKeys as $key => $value) {
+        foreach (static::$requiredKeys as $key => $value) {
             $this->issetKey($actualData, $key);
         }
     }
@@ -139,4 +142,5 @@ trait AssertResponse
         self::assertInternalType('array', $actualResponse[$key], 'isArray: {' . $key . '} required isArray');
     }
 }
+
 
